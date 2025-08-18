@@ -11,6 +11,34 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletResponse;
 
+class ShoppingItem {
+	
+	private String item;
+	private String user;
+	
+	ShoppingItem(String item, String user) {
+		this.item = item;
+		this.user = user;
+	}
+	
+	public String getItem() {
+		return item;
+	}
+	
+	public void setItem(String item) {
+		this.item = item;
+	}
+	
+	public String getUser() {
+		return user;
+	}
+	
+	public void setUser(String user) {
+		this.user = user;
+	}
+	
+}
+
 @RestController
 public class UserRegistration {
 
@@ -37,7 +65,7 @@ public class UserRegistration {
 	 * shoppingList[i] 2. return result;
 	 */
 
-	List<String> shoppingList = new ArrayList<>();
+	List<ShoppingItem> shoppingList = new ArrayList<>();
 
 	@GetMapping("/shopping/list")
 	public String getShowShoppingListPage() {
@@ -69,7 +97,8 @@ public class UserRegistration {
 
 	@GetMapping("/shopping/save")
 	public String saveNewShoppingItem(@RequestParam("item") String item, HttpServletResponse resp) throws IOException {
-		shoppingList.add(item);
+//		shoppingList.add(item);
+		shoppingList.add(new ShoppingItem(item, "dummyuser"));
 		resp.sendRedirect("/shopping/list"); // browser goes to this url
 		return "Item added!";
 	}
