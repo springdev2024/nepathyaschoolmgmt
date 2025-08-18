@@ -15,14 +15,13 @@ import jakarta.servlet.http.HttpServletResponse;
 public class ShoppingController {
 	List<ShoppingItem> shoppingList = new ArrayList<>();
 
-
 	/**
 	 * create a method to show the collected shopping list items 1. loop through
 	 * shoppingList[] -> concatenate shoppingList[i] with result result = result +
 	 * shoppingList[i] 2. return result;
 	 */
-	@GetMapping("/shopping/list")
-	public String getShowShoppingListPage() {
+	@GetMapping("/shopping/list/{user}")
+	public String getShowShoppingListPage(@PathVariable("user") String user) {
 		String result = "<p>My shopping list:</p>";
 
 		if (shoppingList.isEmpty()) {
@@ -30,8 +29,10 @@ public class ShoppingController {
 		} else {
 			result = result + "<ul>"; // begin the list
 			for (int i = 0; i < shoppingList.size(); i++) {
-				result = result + "<li><span>" + shoppingList.get(i) + "</span>" + "<a href=\"/shopping/delete/" + i
-						+ "\"> Remove </a>" + "</li>";
+				if (shoppingList.get(i).getUser().equals(user)) {
+					result = result + "<li><span>" + shoppingList.get(i).getItem() + "</span>"
+							+ "<a href=\"/shopping/delete/" + i + "\"> Remove </a>" + "</li>";
+				}
 			}
 			result = result + "</ul>"; // end the list
 		}
@@ -40,7 +41,8 @@ public class ShoppingController {
 		// Can you put the form to add new item in this place?
 		result = result + """
 					<form action="/shopping/save" method="get">
-					<input type="text" name="item" />
+					<input type="text" placeholder="Item" name="item" />
+					<input type="text" placeholder="User" name="user" />
 					<input type="submit" value="ADD ITEM" />
 				</form>
 				""";
@@ -50,9 +52,9 @@ public class ShoppingController {
 	}
 
 	@GetMapping("/shopping/save")
-	public String saveNewShoppingItem(@RequestParam("item") String item, HttpServletResponse resp) throws IOException {
-//		shoppingList.add(item);
-		shoppingList.add(new ShoppingItem(item, "dummyuser"));
+	public String saveNewShoppingItem(@RequestParam("item") String item, @RequestParam("user") String user,
+			HttpServletResponse resp) throws IOException {
+		shoppingList.add(new ShoppingItem(item, user));
 		resp.sendRedirect("/shopping/list"); // browser goes to this url
 		return "Item added!";
 	}
