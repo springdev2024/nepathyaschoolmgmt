@@ -69,24 +69,18 @@ public class UserRegistration {
 
 	@GetMapping("/shopping/save")
 	public String saveNewShoppingItem(@RequestParam("item") String item, HttpServletResponse resp) throws IOException {
-		System.out.println("Item: " + item);
 		shoppingList.add(item);
-
 		resp.sendRedirect("/shopping/list"); // browser goes to this url
-
 		return "Item added!";
 	}
 
 	// TASK: Try to delete an item from the shopping list
 	@GetMapping("/shopping/delete/{index}")
 	public String deleteShoppingItem(@PathVariable("index") int index, HttpServletResponse resp) throws IOException {
-		
 		if (index < shoppingList.size()) {
 			shoppingList.remove(index);
 		}
-
 		resp.sendRedirect("/shopping/list"); // browser goes to this url
-
 		return "Item deleted!";
 	}
 
