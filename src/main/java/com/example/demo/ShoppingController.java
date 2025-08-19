@@ -22,7 +22,8 @@ public class ShoppingController {
 	 */
 	@GetMapping("/shopping/list/{user}")
 	public String getShowShoppingListPage(@PathVariable("user") String user) {
-		String result = "<p>My shopping list:</p>";
+		String result = "<h1>Hello, " + user + "!</h1>";
+		result = result + "<p>Your shopping list:</p>";
 
 		if (shoppingList.isEmpty()) {
 			result = result + "<p><b>No items</b></p>";
@@ -40,12 +41,14 @@ public class ShoppingController {
 
 		// Can you put the form to add new item in this place?
 		result = result + """
-					<form action="/shopping/save" method="get">
-					<input type="text" placeholder="Item" name="item" />
-					<input type="text" placeholder="User" name="user" />
-					<input type="submit" value="ADD ITEM" />
-				</form>
-				""";
+				<form action="/shopping/save" method="get">
+				<input type="text" placeholder="Item" name="item" />
+				<input type="hidden" placeholder="User" name="user"
+				""" + " value=\"" + user + "\" />" +
+				"""
+						<input type="submit" value="ADD ITEM" />
+						</form>
+						""";
 
 		System.out.println(result); // print raw HTML
 		return result;
@@ -55,7 +58,7 @@ public class ShoppingController {
 	public String saveNewShoppingItem(@RequestParam("item") String item, @RequestParam("user") String user,
 			HttpServletResponse resp) throws IOException {
 		shoppingList.add(new ShoppingItem(item, user));
-		resp.sendRedirect("/shopping/list"); // browser goes to this url
+		resp.sendRedirect("/shopping/list/" + user); // browser goes to this url
 		return "Item added!";
 	}
 
