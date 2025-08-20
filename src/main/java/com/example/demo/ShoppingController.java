@@ -3,12 +3,15 @@ package com.example.demo;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
@@ -21,7 +24,22 @@ public class ShoppingController {
 	 * shoppingList[i] 2. return result;
 	 */
 	@GetMapping("/shopping/list/{user}")
-	public String getShowShoppingListPage(@PathVariable("user") String user) {
+	public String getShowShoppingListPage(@PathVariable("user") String user, 
+			HttpServletResponse response, 
+			HttpServletRequest request) {
+		
+		
+		// Read the cookies sent by client/browser
+		Cookie[] cookies = request.getCookies();
+		if(cookies != null) {
+			for(Cookie cookie: cookies) {
+				String cookieName = cookie.getName();
+				String cookieValue = cookie.getValue();
+				System.out.println(cookieName + ": " + cookieValue);
+			}
+		}
+		
+		
 		String result = "<h1>Hello, " + user + "!</h1>";
 		result = result + "<p>Your shopping list:</p>";
 
@@ -51,6 +69,8 @@ public class ShoppingController {
 						""";
 
 		System.out.println(result); // print raw HTML
+		String key = "key" + (new Random()).nextInt();
+		response.setHeader("Set-Cookie", key + "=nepathyacollege");
 		return result;
 	}
 
