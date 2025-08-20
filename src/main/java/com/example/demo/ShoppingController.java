@@ -33,6 +33,7 @@ public class ShoppingController {
 		Cookie[] cookies = request.getCookies();
 		if(cookies != null) {
 			for(Cookie cookie: cookies) {
+				// check if a specific token is present
 				String cookieName = cookie.getName();
 				String cookieValue = cookie.getValue();
 				System.out.println(cookieName + ": " + cookieValue);
@@ -69,7 +70,9 @@ public class ShoppingController {
 						""";
 
 		System.out.println(result); // print raw HTML
-		String key = "key" + (new Random()).nextInt();
+		
+		String key = "key" + (new Random()).nextInt();   
+		// set the cookie
 		response.setHeader("Set-Cookie", key + "=nepathyacollege");
 		return result;
 	}
