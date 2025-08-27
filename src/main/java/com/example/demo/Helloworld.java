@@ -11,6 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class Helloworld {
 
 	int count = 0;
+	
+	@GetMapping("/token/{num}")
+	public String getRandomToken(@PathVariable("num") int len) {
+		return UsefulMethods.getRandomString(len);
+	}
 
 	@GetMapping("/greet")
 	public String greet() {
