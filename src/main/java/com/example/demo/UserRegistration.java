@@ -22,10 +22,12 @@ public class UserRegistration {
 		// check if user has token
 		Cookie[] cookies = request.getCookies();
 		boolean userLoggedIn = false;
+		String token = null;
 		if (cookies != null) {
 			for (Cookie cookie : cookies) {
 				if (cookie.getName().equals("SECUREID")) {
 					userLoggedIn = true;
+					token = cookie.getValue();
 					break;
 				}
 			}
@@ -34,7 +36,14 @@ public class UserRegistration {
 		if (userLoggedIn) {
 			// user's cookie has SECUREID (which was probably given by the server)
 			// TODO: greet the user
-			return "You are logged in already!";
+			String username = null;
+			for(LoginInfo loginInfo: allLoggedInUsers) {
+				if(loginInfo.getToken().equals(token)) {
+					username = loginInfo.getUsername();
+					break;
+				}
+			}
+			return "<h2>Hello, " + username + "!</h2>";
 		} else {
 			response.sendRedirect("/login");
 		}
