@@ -1,9 +1,10 @@
 package com.example.demo;
 
 import java.security.SecureRandom;
-import java.util.Random;
 
 public class UsefulMethods {
+	
+	static String COOKIE_NAME = "SECUREID";
 
 	static String sampleSpace = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 	static int SIZE = sampleSpace.length();

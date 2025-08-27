@@ -54,7 +54,7 @@ public class Helloworld {
 	}
 	
 	
-	@GetMapping("/")
+	@GetMapping("/homepage")
 	public String getHomePage() {
 		return """
 				<a href="/greet">Greet Page</a> <br>
