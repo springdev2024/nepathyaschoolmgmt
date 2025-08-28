@@ -4,6 +4,8 @@ public class LoginInfo {
 
 	private String username;
 	private String token;
+	private String email;
+	private String fullName;
 
 	public String getUsername() {
 		return username;
@@ -24,6 +26,22 @@ public class LoginInfo {
 	public LoginInfo(String username, String token) {
 		this.username = username;
 		this.token = token;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
 	}
 
 }

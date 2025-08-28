@@ -19,7 +19,7 @@ public class UserRegistration {
 
 	@GetMapping("/")
 	public String getHomePage(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		// check if user has token
+		// check if user has token in their cookies
 		Cookie[] cookies = request.getCookies();
 		boolean userLoggedIn = false;
 		String token = null;
@@ -35,15 +35,16 @@ public class UserRegistration {
 
 		if (userLoggedIn) {
 			// user's cookie has SECUREID (which was probably given by the server)
-			// TODO: greet the user
-			String username = null;
-			for(LoginInfo loginInfo: allLoggedInUsers) {
-				if(loginInfo.getToken().equals(token)) {
-					username = loginInfo.getUsername();
+			LoginInfo info = null;
+			for (LoginInfo loginInfo : allLoggedInUsers) {
+				if (loginInfo.getToken().equals(token)) {
+					info = loginInfo;
 					break;
 				}
 			}
-			return "<h2>Hello, " + username + "!</h2>";
+			return "<h2>Hello, " + info.getUsername() + "!</h2>" + """
+					<a href="/profile">Profile</a>
+					""" + "<p>" + info.getFullName() + " • " + info.getEmail() + "</p>";
 		} else {
 			response.sendRedirect("/login");
 		}
@@ -60,8 +61,84 @@ public class UserRegistration {
 				</form>""";
 	}
 
+	@GetMapping("/profile")
+	public String getProfilePage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		Cookie[] cookies = request.getCookies();
+		boolean userLoggedIn = false;
+		String token = null;
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if (cookie.getName().equals("SECUREID")) {
+					userLoggedIn = true;
+					token = cookie.getValue();
+					break;
+				}
+			}
+		}
+
+		if (userLoggedIn) {
+			// user's cookie has SECUREID (which was probably given by the server)
+			String username = null;
+			for (LoginInfo loginInfo : allLoggedInUsers) {
+				if (loginInfo.getToken().equals(token)) {
+					username = loginInfo.getUsername();
+					break;
+				}
+			}
+			return "<h2>Hello, " + username + "!</h2>" + """
+					<form action="/profile/save" method="get">
+					<input type="text" placeholder="Full Name" name="fullName" />
+					<input type="text" placeholder="Email" name="email" />
+					<input type="submit" value="SAVE" />
+					</form>""";
+		} else {
+			response.sendRedirect("/login");
+		}
+		return "";
+	}
+
+	@GetMapping("/profile/save")
+	public String saveProfile(@RequestParam("fullName") String fullName, @RequestParam("email") String email,
+			HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		Cookie[] cookies = request.getCookies();
+		boolean userLoggedIn = false;
+		String token = null;
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if (cookie.getName().equals("SECUREID")) {
+					userLoggedIn = true;
+					token = cookie.getValue();
+					break;
+				}
+			}
+		}
+
+		if (userLoggedIn) {
+			// user's cookie has SECUREID (which was probably given by the server)
+			LoginInfo info = null;
+			for (LoginInfo loginInfo : allLoggedInUsers) {
+				if (loginInfo.getToken().equals(token)) {
+					info = loginInfo;
+					break;
+				}
+			}
+
+			// TODO: actually save the fullname & email in database
+			info.setFullName(fullName);
+			info.setEmail(email);
+
+			response.sendRedirect("/");
+
+		} else {
+			response.sendRedirect("/login");
+		}
+		return "";
+	}
+
 	@GetMapping("/login/save")
-	public String saveLoginPage(@RequestParam("username") String username, HttpServletResponse response) {
+	public String saveLoginPage(@RequestParam("username") String username, HttpServletResponse response)
+			throws IOException {
 		// TODO: generate, save and provide new token to this user.
 
 		// 1. Generate token
@@ -76,7 +153,9 @@ public class UserRegistration {
 		cookie.setPath("/");
 		response.addCookie(cookie);
 
-		return "Login submitted!";   // redirect to dashboard, homepage
+		response.sendRedirect("/");
+
+		return "";
 	}
 
 }
