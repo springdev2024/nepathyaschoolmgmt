@@ -15,33 +15,14 @@ import jakarta.servlet.http.HttpServletResponse;
 @RestController
 public class UserRegistration {
 
-	List<LoginInfo> allLoggedInUsers = new ArrayList<>();
+	public static List<LoginInfo> allLoggedInUsers = new ArrayList<>();
 
 	@GetMapping("/")
 	public String getHomePage(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// check if user has token in their cookies
-		Cookie[] cookies = request.getCookies();
-		boolean userLoggedIn = false;
-		String token = null;
-		if (cookies != null) {
-			for (Cookie cookie : cookies) {
-				if (cookie.getName().equals("SECUREID")) {
-					userLoggedIn = true;
-					token = cookie.getValue();
-					break;
-				}
-			}
-		}
-
-		if (userLoggedIn) {
+		LoginInfo info = UsefulMethods.getLoggedInUser(request);
+		if (info != null) {
 			// user's cookie has SECUREID (which was probably given by the server)
-			LoginInfo info = null;
-			for (LoginInfo loginInfo : allLoggedInUsers) {
-				if (loginInfo.getToken().equals(token)) {
-					info = loginInfo;
-					break;
-				}
-			}
 			return "<h2>Hello, " + info.getUsername() + "!</h2>" + """
 					<a href="/profile">Profile</a>
 					""" + "<p>" + info.getFullName() + " • " + info.getEmail() + "</p>";
@@ -63,29 +44,12 @@ public class UserRegistration {
 
 	@GetMapping("/profile")
 	public String getProfilePage(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		Cookie[] cookies = request.getCookies();
-		boolean userLoggedIn = false;
-		String token = null;
-		if (cookies != null) {
-			for (Cookie cookie : cookies) {
-				if (cookie.getName().equals("SECUREID")) {
-					userLoggedIn = true;
-					token = cookie.getValue();
-					break;
-				}
-			}
-		}
 
-		if (userLoggedIn) {
+		LoginInfo info = UsefulMethods.getLoggedInUser(request);
+
+		if (info != null) {
 			// user's cookie has SECUREID (which was probably given by the server)
-			String username = null;
-			for (LoginInfo loginInfo : allLoggedInUsers) {
-				if (loginInfo.getToken().equals(token)) {
-					username = loginInfo.getUsername();
-					break;
-				}
-			}
-			return "<h2>Hello, " + username + "!</h2>" + """
+			return "<h2>Hello, " + info.getUsername() + "!</h2>" + """
 					<form action="/profile/save" method="get">
 					<input type="text" placeholder="Full Name" name="fullName" />
 					<input type="text" placeholder="Email" name="email" />
@@ -101,30 +65,10 @@ public class UserRegistration {
 	public String saveProfile(@RequestParam("fullName") String fullName, @RequestParam("email") String email,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-		Cookie[] cookies = request.getCookies();
-		boolean userLoggedIn = false;
-		String token = null;
-		if (cookies != null) {
-			for (Cookie cookie : cookies) {
-				if (cookie.getName().equals("SECUREID")) {
-					userLoggedIn = true;
-					token = cookie.getValue();
-					break;
-				}
-			}
-		}
+		LoginInfo info = UsefulMethods.getLoggedInUser(request);
 
-		if (userLoggedIn) {
-			// user's cookie has SECUREID (which was probably given by the server)
-			LoginInfo info = null;
-			for (LoginInfo loginInfo : allLoggedInUsers) {
-				if (loginInfo.getToken().equals(token)) {
-					info = loginInfo;
-					break;
-				}
-			}
-
-			// TODO: actually save the fullname & email in database
+		if (info != null) {
+			// actually save the fullname & email in database
 			info.setFullName(fullName);
 			info.setEmail(email);
 
