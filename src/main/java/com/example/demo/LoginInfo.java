@@ -3,6 +3,7 @@ package com.example.demo;
 public class LoginInfo {
 
 	private String username;
+	private String password;
 	private String token;
 	private String email;
 	private String fullName;
@@ -42,6 +43,14 @@ public class LoginInfo {
 
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 }

@@ -83,14 +83,31 @@ public class UserRegistration {
 	@GetMapping("/login/save")
 	public String saveLoginPage(@RequestParam("username") String username, HttpServletResponse response)
 			throws IOException {
-		// TODO: generate, save and provide new token to this user.
+		// This method generates, saves & provides new token to the user with given username
+
+		// TASK: if user is already in the system, return without creating a new user
+		// TASK: ask for password as well to really secure the user
+
+		LoginInfo loginInfo = null;
 
 		// 1. Generate token
 		String token = UsefulMethods.getRandomString(20);
 
-		// 2. Save token to database along with username
-		LoginInfo loginInfo = new LoginInfo(username, token);
-		allLoggedInUsers.add(loginInfo);
+		// Check if username already exists in the database
+		for (LoginInfo info : allLoggedInUsers) {
+			if (info.getUsername().equals(username)) {
+				loginInfo = info;
+				loginInfo.setToken(token);
+				break;
+			}
+		}
+
+		// If username is not already in the database, create new user as follows
+		if (loginInfo == null) {
+			// 2. Save token to database along with username for a NEW user
+			loginInfo = new LoginInfo(username, token);
+			allLoggedInUsers.add(loginInfo);
+		}
 
 		// 3. send token to user/client/browser
 		Cookie cookie = new Cookie("SECUREID", token);
