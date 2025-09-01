@@ -38,6 +38,7 @@ public class UserRegistration {
 		return """
 				<form action="/login/save" method="get">
 				<input type="text" placeholder="Username" name="username" />
+				<input type="password" placeholder="Password" name="password" />
 				<input type="submit" value="LOGIN" />
 				</form>""";
 	}
@@ -81,9 +82,10 @@ public class UserRegistration {
 	}
 
 	@GetMapping("/login/save")
-	public String saveLoginPage(@RequestParam("username") String username, HttpServletResponse response)
-			throws IOException {
-		// This method generates, saves & provides new token to the user with given username
+	public String saveLoginPage(@RequestParam("username") String username, @RequestParam("password") String password,
+			HttpServletResponse response) throws IOException {
+		// This method generates, saves & provides new token to the user with given
+		// username
 
 		// TASK: if user is already in the system, return without creating a new user
 		// TASK: ask for password as well to really secure the user
@@ -96,9 +98,15 @@ public class UserRegistration {
 		// Check if username already exists in the database
 		for (LoginInfo info : allLoggedInUsers) {
 			if (info.getUsername().equals(username)) {
-				loginInfo = info;
-				loginInfo.setToken(token);
-				break;
+				if (info.getPassword().equals(password)) {
+					loginInfo = info;
+					loginInfo.setToken(token);
+					break;
+				} else {
+					return """
+							<p style="color: red;">
+							Invalid credentials!</p>""";
+				}
 			}
 		}
 
@@ -106,6 +114,7 @@ public class UserRegistration {
 		if (loginInfo == null) {
 			// 2. Save token to database along with username for a NEW user
 			loginInfo = new LoginInfo(username, token);
+			loginInfo.setPassword(password);
 			allLoggedInUsers.add(loginInfo);
 		}
 
