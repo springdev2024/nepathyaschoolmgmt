@@ -24,7 +24,8 @@ public class UserRegistration {
 		if (info != null) {
 			// user's cookie has SECUREID (which was probably given by the server)
 			return "<h2>Hello, " + info.getUsername() + "!</h2>" + """
-					<a href="/profile">Profile</a>
+					<a href="/profile">Profile</a> <br>
+					<a href="/chat/room">Chat Room</a>
 					""" + "<p>" + info.getFullName() + " • " + info.getEmail() + "</p>";
 		} else {
 			response.sendRedirect("/login");
@@ -119,7 +120,7 @@ public class UserRegistration {
 		}
 
 		// 3. send token to user/client/browser
-		Cookie cookie = new Cookie("SECUREID", token);
+		Cookie cookie = new Cookie(UsefulMethods.COOKIE_NAME, token);
 		cookie.setPath("/");
 		response.addCookie(cookie);
 

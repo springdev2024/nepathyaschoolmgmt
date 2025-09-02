@@ -1,19 +1,71 @@
 package com.example.demo;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 public class ChatController {
 
 	List<Chat> chats = new ArrayList<>();
-	
-	@GetMapping("/chats")
-	public String getAllChats() {
-		return "";
+
+	@GetMapping("/chat/room")
+	public String showChatRoomPage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		// check if user is logged in
+		// if not, redirect to /login
+		LoginInfo info = UsefulMethods.getLoggedInUser(request);
+
+		if (info == null) {
+			response.sendRedirect("/login");
+			return "";
+		}
+
+		return """
+				<h1>Chat Message Box</h1>
+				<form action="/chat/send" method="get">
+					<input type="text" name="receiver" placeholder="Receiver's username" /> <br>
+					<input type="text" name="message" placeholder="Message" /> <br>
+					<input type="submit" value="Send" />
+				</form>
+				""";
 	}
-	
+
+	@GetMapping("/chat/send")
+	public String sendChatMessage(@RequestParam("receiver") String receiverUsername,
+			@RequestParam("message") String message, HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+
+		// check if sender is logged in
+		// if not redirect to /login
+		LoginInfo info = UsefulMethods.getLoggedInUser(request);
+		if (info == null) {
+			response.sendRedirect("/login");
+			return "";
+		}
+
+		// Check if receiversUsername actually exists in the system
+		// and send error message if it doesn't
+
+		// create a Chat object with following information:
+		// fromUsername
+		// toUsername
+		// message
+		// time
+		// seen
+		
+		// append that Chat object to Chat array database
+		
+		// redirect to /chat/room
+
+		return "DEBUG: " + receiverUsername + " <- " + message;
+	}
+
 }
