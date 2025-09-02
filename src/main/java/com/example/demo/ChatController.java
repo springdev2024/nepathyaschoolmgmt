@@ -53,6 +53,17 @@ public class ChatController {
 
 		// Check if receiversUsername actually exists in the system
 		// and send error message if it doesn't
+		boolean hasFoundReceiver = false;
+		for(LoginInfo e: UserRegistration.allLoggedInUsers) {
+			if(e.getUsername().equals(receiverUsername)) {
+				hasFoundReceiver = true;
+				break;
+			}
+		}
+		if(hasFoundReceiver == false) {
+			return "Sorry, could not find given receiver's username!";
+		}
+		
 
 		// create a Chat object with following information:
 		// fromUsername
