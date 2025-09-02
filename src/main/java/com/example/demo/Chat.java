@@ -2,30 +2,30 @@ package com.example.demo;
 
 public class Chat {
 
-	private String fromUser;
-	private String toUser;
+	private String fromUsername;
+	private String toUsername;
 	private String message;
 
-	public Chat(String fromUser, String toUser, String message) {
-		this.fromUser = fromUser;
-		this.toUser = toUser;
+	public Chat(String fromUsername, String toUsername, String message) {
+		this.fromUsername = fromUsername;
+		this.toUsername = toUsername;
 		this.message = message;
 	}
 
-	public String getFromUser() {
-		return fromUser;
+	public String getFromUsername() {
+		return fromUsername;
 	}
 
-	public void setFromUser(String fromUser) {
-		this.fromUser = fromUser;
+	public void setFromUsername(String fromUsername) {
+		this.fromUsername = fromUsername;
 	}
 
-	public String getToUser() {
-		return toUser;
+	public String getToUsername() {
+		return toUsername;
 	}
 
-	public void setToUser(String toUser) {
-		this.toUser = toUser;
+	public void setToUsername(String toUsername) {
+		this.toUsername = toUsername;
 	}
 
 	public String getMessage() {
@@ -35,5 +35,4 @@ public class Chat {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-
 }

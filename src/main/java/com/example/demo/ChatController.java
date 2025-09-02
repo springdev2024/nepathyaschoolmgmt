@@ -21,15 +21,22 @@ public class ChatController {
 
 		// check if user is logged in
 		// if not, redirect to /login
-		LoginInfo info = UsefulMethods.getLoggedInUser(request);
+		LoginInfo user = UsefulMethods.getLoggedInUser(request);
 
-		if (info == null) {
+		if (user == null) {
 			response.sendRedirect("/login");
 			return "";
 		}
 
-		return """
-				<h1>Chat Message Box</h1>
+		// create a list of <p> tags containing your received chats;
+		String myChats = "";
+		for (Chat chat : chats) {
+			if (chat.getToUsername().equals(user.getUsername())) {
+				myChats += "<p>" + chat.getMessage() + " - " + chat.getFromUsername() + "</p>";
+			}
+		}
+
+		return "<h1>Chat Message Box</h1>" + myChats + """
 				<form action="/chat/send" method="get">
 					<input type="text" name="receiver" placeholder="Receiver's username" /> <br>
 					<input type="text" name="message" placeholder="Message" /> <br>
@@ -45,8 +52,8 @@ public class ChatController {
 
 		// check if sender is logged in
 		// if not redirect to /login
-		LoginInfo info = UsefulMethods.getLoggedInUser(request);
-		if (info == null) {
+		LoginInfo user = UsefulMethods.getLoggedInUser(request);
+		if (user == null) {
 			response.sendRedirect("/login");
 			return "";
 		}
@@ -54,27 +61,27 @@ public class ChatController {
 		// Check if receiversUsername actually exists in the system
 		// and send error message if it doesn't
 		boolean hasFoundReceiver = false;
-		for(LoginInfo e: UserRegistration.allLoggedInUsers) {
-			if(e.getUsername().equals(receiverUsername)) {
+		for (LoginInfo e : UserRegistration.allLoggedInUsers) {
+			if (e.getUsername().equals(receiverUsername)) {
 				hasFoundReceiver = true;
 				break;
 			}
 		}
-		if(hasFoundReceiver == false) {
+		if (hasFoundReceiver == false) {
 			return "Sorry, could not find given receiver's username!";
 		}
-		
 
 		// create a Chat object with following information:
 		// fromUsername
 		// toUsername
 		// message
-		// time
-		// seen
-		
+		Chat chat = new Chat(user.getUsername(), receiverUsername, message);
+
 		// append that Chat object to Chat array database
-		
+		chats.add(chat);
+
 		// redirect to /chat/room
+		response.sendRedirect("/chat/room");
 
 		return "DEBUG: " + receiverUsername + " <- " + message;
 	}
