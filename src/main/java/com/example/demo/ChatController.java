@@ -19,6 +19,8 @@ public class ChatController {
 	@GetMapping("/chat/room")
 	public String showChatRoomPage(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+		// TODO: eliminate the need for providing receiver's username all the time
+		
 		// check if user is logged in
 		// if not, redirect to /login
 		LoginInfo user = UsefulMethods.getLoggedInUser(request);
