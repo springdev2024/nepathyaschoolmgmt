@@ -4,84 +4,77 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@RestController
+@Controller
 public class UserRegistration {
 
 	public static List<LoginInfo> allLoggedInUsers = new ArrayList<>();
 
 	@GetMapping("/")
-	public String getHomePage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public String getHomePage(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws IOException {
 		// check if user has token in their cookies
 		LoginInfo info = UsefulMethods.getLoggedInUser(request);
 		if (info != null) {
 			// user's cookie has SECUREID (which was probably given by the server)
-			return "<h2>Hello, " + info.getUsername() + "!</h2>" + """
-					<a href="/profile">Profile</a> <br>
-					<a href="/chat/users">Available Users</a>
-					""" + "<p>" + info.getFullName() + " • " + info.getEmail() + "</p>";
+			model.addAttribute("user", info);
+			return "home.html";
 		} else {
-			response.sendRedirect("/login");
+			return "login.html";
 		}
-
-		return "";
 	}
 
 	@GetMapping("/login")
 	public String getLoginPage() {
-		return """
-				<form action="/login" method="post">
-				<input type="text" placeholder="Username" name="username" />
-				<input type="password" placeholder="Password" name="password" />
-				<input type="submit" value="LOGIN" />
-				</form>""";
+		return "login.html";
 	}
 
-	@GetMapping("/profile")
-	public String getProfilePage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//	@GetMapping("/profile")
+//	public String getProfilePage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//
+//		LoginInfo info = UsefulMethods.getLoggedInUser(request);
+//
+//		if (info != null) {
+//			// user's cookie has SECUREID (which was probably given by the server)
+//			return "<h2>Hello, " + info.getUsername() + "!</h2>" + """
+//					<form action="/profile/save" method="get">
+//					<input type="text" placeholder="Full Name" name="fullName" />
+//					<input type="text" placeholder="Email" name="email" />
+//					<input type="submit" value="SAVE" />
+//					</form>""";
+//		} else {
+//			response.sendRedirect("/login");
+//		}
+//		return "";
+//	}
 
-		LoginInfo info = UsefulMethods.getLoggedInUser(request);
-
-		if (info != null) {
-			// user's cookie has SECUREID (which was probably given by the server)
-			return "<h2>Hello, " + info.getUsername() + "!</h2>" + """
-					<form action="/profile/save" method="get">
-					<input type="text" placeholder="Full Name" name="fullName" />
-					<input type="text" placeholder="Email" name="email" />
-					<input type="submit" value="SAVE" />
-					</form>""";
-		} else {
-			response.sendRedirect("/login");
-		}
-		return "";
-	}
-
-	@GetMapping("/profile/save")
-	public String saveProfile(@RequestParam("fullName") String fullName, @RequestParam("email") String email,
-			HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-		LoginInfo info = UsefulMethods.getLoggedInUser(request);
-
-		if (info != null) {
-			// actually save the fullname & email in database
-			info.setFullName(fullName);
-			info.setEmail(email);
-
-			response.sendRedirect("/");
-
-		} else {
-			response.sendRedirect("/login");
-		}
-		return "";
-	}
+//	@GetMapping("/profile/save")
+//	public String saveProfile(@RequestParam("fullName") String fullName, @RequestParam("email") String email,
+//			HttpServletRequest request, HttpServletResponse response) throws IOException {
+//
+//		LoginInfo info = UsefulMethods.getLoggedInUser(request);
+//
+//		if (info != null) {
+//			// actually save the fullname & email in database
+//			info.setFullName(fullName);
+//			info.setEmail(email);
+//
+//			response.sendRedirect("/");
+//
+//		} else {
+//			response.sendRedirect("/login");
+//		}
+//		return "";
+//	}
 
 	@PostMapping("/login")
 	public String saveLoginPage(@RequestParam("username") String username, @RequestParam("password") String password,
@@ -125,9 +118,9 @@ public class UserRegistration {
 		cookie.setPath("/");
 		response.addCookie(cookie);
 
-		response.sendRedirect("/");
+//		response.sendRedirect("/");
 
-		return "";
+		return "home.html";
 	}
 
 }
