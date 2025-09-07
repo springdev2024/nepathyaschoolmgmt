@@ -17,10 +17,6 @@ public class ChatController {
 
 	List<Chat> chats = new ArrayList<>();
 
-	// TODO
-	// create a page to list all the users in the system so that
-	// clicking a username will open the chat room with that user
-
 	@GetMapping("/chat/users")
 	public String showAllUsersPage(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// check if user is logged in
@@ -46,11 +42,6 @@ public class ChatController {
 	public String showChatRoomPage(@PathVariable("receiver") String receiver, HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 
-		// TODO: eliminate the need for providing receiver's username all the time
-		// TODO: show chat room with a single user
-
-		// TODO: user @PathVariable("receiver") to grab receiver's username
-
 		// check if user is logged in
 		// if not, redirect to /login
 		LoginInfo user = UsefulMethods.getLoggedInUser(request);
@@ -62,7 +53,7 @@ public class ChatController {
 
 		// create a list of <p> tags containing your received chats;
 
-		// TODO: show only the messages related to the receiver
+		// show only the messages related to the receiver
 		// i.e. sent by the receiver OR received by the receiver
 
 		String myChats = "";
@@ -78,10 +69,6 @@ public class ChatController {
 				myChats += "<p>" + chat.getMessage() + "</p>";
 			}
 			
-//			if (chat.getToUsername().equals(receiver) && chat.getFromUsername().equals(user.getUsername())
-//					|| chat.getFromUsername().equals(receiver) && chat.getToUsername().equals(user.getUsername())) {
-//				myChats += "<p>" + chat.getMessage() + " - " + chat.getFromUsername() + "</p>";
-//			}
 		}
 
 		String hiddenInput = "<input type=\"hidden\" name=\"receiver\" value=\"" + receiver + "\" /> <br>";
