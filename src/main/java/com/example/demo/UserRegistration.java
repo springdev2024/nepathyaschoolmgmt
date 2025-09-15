@@ -16,6 +16,12 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class UserRegistration {
+	
+	@GetMapping("/login")
+	public String getLoginPage(Model model) {
+		model.addAttribute("name", "Nepathya College");
+		return "login.html";
+	}
 
 	public static List<LoginInfo> allLoggedInUsers = new ArrayList<>();
 
@@ -33,10 +39,7 @@ public class UserRegistration {
 		}
 	}
 
-	@GetMapping("/login")
-	public String getLoginPage() {
-		return "login.html";
-	}
+	
 
 //	@GetMapping("/profile")
 //	public String getProfilePage(HttpServletRequest request, HttpServletResponse response) throws IOException {
