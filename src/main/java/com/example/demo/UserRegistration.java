@@ -2,6 +2,7 @@ package com.example.demo;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -14,12 +15,48 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+class Food {
+	private String name;
+	private boolean isFruit;
+
+	public Food(String name, boolean isFruit) {
+		this.name = name;
+		this.isFruit = isFruit;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public boolean isFruit() {
+		return isFruit;
+	}
+
+	public void setFruit(boolean isFruit) {
+		this.isFruit = isFruit;
+	}
+
+}
+
 @Controller
 public class UserRegistration {
+	
+	// this array is for demo only
+	List<Food> foods = Arrays.asList(
+			new Food("Orange", true),
+			new Food("Potato", false),
+			new Food("Cauli", false),
+			new Food("Grapes", true)
+			);
 	
 	@GetMapping("/login")
 	public String getLoginPage(Model model) {
 		model.addAttribute("name", "Nepathya College");
+		model.addAttribute("foods", foods);
 		return "login.html";
 	}
 
@@ -38,8 +75,6 @@ public class UserRegistration {
 			return "login.html";
 		}
 	}
-
-	
 
 //	@GetMapping("/profile")
 //	public String getProfilePage(HttpServletRequest request, HttpServletResponse response) throws IOException {
