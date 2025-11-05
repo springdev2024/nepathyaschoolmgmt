@@ -23,21 +23,13 @@ Laptop		128000
 			<th>Price</th>
 		</thead>
 		<tbody>
-			<tr>
+
+			<tr th:each="p : ${products}">
 				<td>1.</td>
-				<td>Mouse</td>
-				<td>950</td>
+				<td>p.name</td>
+				<td>p.price</td>
 			</tr>
-			<tr>
-				<td>2.</td>
-				<td>USB Headset</td>
-				<td>2700</td>
-			</tr>
-			<tr>
-				<td>3.</td>
-				<td>Laptop</td>
-				<td>128000</td>
-			</tr>
+
 		</tbody>
 	</table>
 </body>
