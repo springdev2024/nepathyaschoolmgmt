@@ -17,6 +17,9 @@ public class Product {
 		this.name = name;
 		this.price = price;
 	}
+	
+	public Product() {
+	}
 
 	public String getName() {
 		return name;
