@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HtmlBasedController {
 
-	@GetMapping("/homepage")
+	@GetMapping("/homepages")
 	public String getHomePage(Model model) {
 		model.addAttribute("name", "Nepathya");
 		model.addAttribute("isClosed", true);
