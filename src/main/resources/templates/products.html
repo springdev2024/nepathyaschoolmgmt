@@ -25,13 +25,21 @@ Laptop		128000
 		<tbody>
 
 			<tr th:each="p : ${products}">
-				<td>1.</td>
-				<td>p.name</td>
-				<td>p.price</td>
+				<td th:text="${pStat.count}"></td>
+				<td th:text="${p.name}"></td>
+				<td th:text="${p.price}"></td>
 			</tr>
 
 		</tbody>
 	</table>
+
+	<form action="/product" method="POST">
+		Name:
+		<input type="text" name="name" />
+		Price:
+		<input type="number" name="price" />
+		<input type="submit" value="ADD" />
+	</form>
 </body>
 
 </html>

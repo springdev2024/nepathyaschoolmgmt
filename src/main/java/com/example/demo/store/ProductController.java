@@ -1,8 +1,5 @@
 package com.example.demo.store;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,21 +9,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class ProductController {
-
-	List<Product> products = new ArrayList<>();
 	
 	@Autowired
 	private ProductRepository repository;
 
 	@GetMapping("/products")
 	public String getProducts(Model model) {
-		model.addAttribute("products", products);
+		model.addAttribute("products", repository.findAll());
 		return "products.html";
-	}
-
-	@GetMapping("/product")
-	public String getNewProductPage() {
-		return "newProduct.html";
 	}
 	
 	@PostMapping("/product")
@@ -36,14 +26,12 @@ public class ProductController {
 		 */
 		System.out.println("Name = " + name);
 		System.out.println("Price = " + price);
-		
-		name = name.toUpperCase();
-		
+				
 		Product p = new Product(name, price);
 		
 		repository.save(p);
 		
-		return "newProduct.html";
+		return "redirect:/products";
 	}
 
 }
