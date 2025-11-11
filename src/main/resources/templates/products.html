@@ -1,17 +1,18 @@
-<!-- 
-TASK: create a table of computer accessories available for purchase as follows:
-
-Name		Price
-Mouse		950
-USB Headset	2700
-Laptop		128000
-...
-* Create a class to store info about each product
--->
 <!DOCTYPE html>
 
 <head>
 	<title>Homepage</title>
+	<style>
+		.bg-red {
+			background-color: lightslategray;	
+		}
+		
+		a {
+			text-decoration: none;
+			color: #000;
+		}
+		
+	</style>
 </head>
 
 <body>
@@ -21,13 +22,27 @@ Laptop		128000
 			<th>SN</th>
 			<th>Name</th>
 			<th>Price</th>
+			<th>Actions</th>
 		</thead>
 		<tbody>
-
-			<tr th:each="p : ${products}">
+			
+			<!--
+			pStat.count : 1,2,3, ...
+			pStat.odd : true/false
+			pStat.even : true/false
+			pStat.first : true/false
+			pStat.last : true/false
+			pStat.size : size of array
+			pStat.index : 0,1,2, ...
+			-->
+			
+			<tr th:each="p : ${products}" th:classappend="${pStat.odd ? 'bg-red' : ''}">
 				<td th:text="${pStat.count}"></td>
 				<td th:text="${p.name}"></td>
 				<td th:text="${p.price}"></td>
+				<td>
+					<a th:href="@{/products/edit/{name}(name=${p.name})}">✎</a>
+				</td>
 			</tr>
 
 		</tbody>
