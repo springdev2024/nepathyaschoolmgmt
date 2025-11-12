@@ -24,12 +24,7 @@ public class ProductController {
 	
 	@PostMapping("/product")
 	public String saveNewProduct(Product product) {
-		/**
-		 * code to store the data into database
-		 */
-//		System.out.println("Name = " + produ);
-//		System.out.println("Price = " + price);
-				
+		// upsert object in database
 		repository.save(product);
 		return "redirect:/products";
 	}
@@ -38,12 +33,18 @@ public class ProductController {
 	/**
 	 * Mapping to display edit form
 	 */
-	@GetMapping("/products/edit/{name}")
-	public String getProductEditPage(@PathVariable("name") String productName, Model model) {
+	@GetMapping("/products/edit/{id}")
+	public String getProductEditPage(@PathVariable("id") int productID, Model model) {
+		model.addAttribute("product", repository.findById(productID).get());
 		model.addAttribute("products", repository.findAll());
 		model.addAttribute("forUpdate", true);
-		model.addAttribute("product", repository.findByName(productName));
 		return "products.html";
+	}
+	
+	@PostMapping("/products/delete")
+	public String deleteProductByID(@RequestParam("id") int productID) {
+		repository.deleteById(productID);
+		return "redirect:/products";
 	}
 	
 }

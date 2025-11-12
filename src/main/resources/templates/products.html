@@ -39,19 +39,37 @@
 			pStat.index : 0,1,2, ...
 			-->
 
+			<!-- 
+				Display all the products in the table;
+				
+				* th:classappend is used to conditionally add CSS classes
+				* th:href is used to create dynamic hyperlinks
+			-->
 			<tr th:each="p : ${products}" th:classappend="|${pStat.odd ? 'bg-red' : ''}
 				${forUpdate && product.id == p.id ? 'bg-green': ''}|">
 				<td th:text="${pStat.count}"></td>
 				<td th:text="${p.name}"></td>
 				<td th:text="${p.price}"></td>
 				<td>
-					<a th:href="@{/products/edit/{name}(name=${p.name})}">✎</a>
+					<!-- edit button -->
+					<a th:href="@{/products/edit/{id}(id=${p.id})}">✎</a>
+					
+					<!-- delete button -->
+					<form action="/products/delete" method="post">
+						<input type="hidden" name="id" th:value="${p.id}" />
+						<input type="submit" value="␡" />
+					</form>
 				</td>
 			</tr>
 
 		</tbody>
 	</table>
 
+	<!--
+		A single form can be used/reused for creating or update a product
+		
+		* th:object binds POJO 
+	-->
 	<form action="/product" method="POST" th:object="${product}">
 		Name:
 		<input type="text" th:field="*{name}" />
