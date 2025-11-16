@@ -19,6 +19,10 @@
 </head>
 
 <body>
+	<form action="/products/search" method="get">
+		<input type="text" name="query"/>
+		<input type="submit" value="Search"/>
+	</form>
 	<h1>Available products:</h1>
 	<table>
 		<thead>
@@ -72,6 +76,9 @@
 	-->
 	<form action="/product" method="POST" th:object="${product}">
 		Name:
+	<!-- <input type="text" name="name" id="name" value="${product.name}" /> 
+		the following line is equivalent to this one
+	-->	
 		<input type="text" th:field="*{name}" />
 		Price:
 		<input type="number" name="price" th:field="*{price}" />
